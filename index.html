@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<title>给最爱的你</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet" />
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: linear-gradient(135deg, #ffd6e7, #ffafbd, #ffc3a0);
+    overflow: hidden;
+    font-family: 'Noto Serif SC', serif;
+    position: relative;
+  }
+  
+  .container {
+    position: relative;
+    z-index: 10;
+    padding: 40px 20px;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  
+  h1 {
+    font-family: 'ZCOOL KuaiLe', cursive;
+    font-size: 4rem;
+    color: #d6336c;
+    margin-bottom: 20px;
+    animation: fadeInDown 1.5s ease-out;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    letter-spacing: 2px;
+  }
+  
+  p.intro {
+    font-size: 1.4rem;
+    color: #5a3e36;
+    margin-bottom: 30px;
+    animation: fadeIn 2s ease-out;
+    font-weight: 500;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+  
+  button {
+    padding: 16px 40px;
+    font-size: 1.3rem;
+    background: linear-gradient(45deg, #d6336c, #ff6b6b);
+    border: none;
+    border-radius: 40px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    box-shadow: 0 6px 20px rgba(214, 51, 108, 0.4);
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin: 20px 0 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(214, 51, 108, 0.6);
+  }
+  
+  button:active {
+    transform: translateY(1px);
+  }
+  
+  button::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 60%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  
+  button:hover::after {
+    opacity: 1;
+  }
+
+  #scrollBox {
+    position: relative;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 700px;
+    height: 320px;
+    border: 2px solid rgba(214, 51, 108, 0.2);
+    background: rgba(255, 255, 255, 0.88);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    overflow-y: auto;
+    font-size: 1.4rem;
+    line-height: 1.9;
+    text-align: left;
+    font-family: 'Noto Serif SC', serif;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: #d6336c rgba(255, 255, 255, 0.3);
+    
+    /* 添加淡入淡出遮罩效果 */
+    mask-image: linear-gradient(
+      to bottom, 
+      transparent 0%, 
+      rgba(0,0,0,1) 10%, 
+      rgba(0,0,0,1) 90%, 
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom, 
+      transparent 0%, 
+      rgba(0,0,0,1) 10%, 
+      rgba(0,0,0,1) 90%, 
+      transparent 100%
+    );
+  }
+  
+  #scrollBox::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  #scrollBox::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    margin: 10px 0;
+  }
+  
+  #scrollBox::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #d6336c, #ff6b6b);
+    border-radius: 10px;
+  }
+  
+  #content .line {
+    opacity: 0;
+    animation: fadeInLine 1s forwards;
+    white-space: pre-wrap;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed rgba(214, 51, 108, 0.1);
+  }
+  
+  #content .line.highlight {
+    background: linear-gradient(to right, rgba(255,182,193,0.2), transparent);
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-left: -10px;
+  }
+
+  @keyframes fadeInLine {
+    to { opacity: 1; }
+  }
+
+  .heart-falls {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0; left: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 5;
+  }
+  
+  .heart {
+    position: absolute;
+    font-size: 28px;
+    color: #ff6b81;
+    animation: fall 8s linear infinite;
+    opacity: 0.8;
+    filter: drop-shadow(0 0 4px rgba(255, 0, 85, 0.7));
+    z-index: 5;
+  }
+  
+  @keyframes fall {
+    0% { 
+      transform: translateY(-10%) translateX(0) rotate(0deg); 
+      opacity: 0.6; 
+    }
+    25% { 
+      transform: translateY(25%) translateX(15px) rotate(45deg); 
+    }
+    50% { 
+      transform: translateY(50%) translateX(-10px) rotate(90deg); 
+      opacity: 1;
+    }
+    75% { 
+      transform: translateY(75%) translateX(10px) rotate(135deg); 
+    }
+    100% { 
+      transform: translateY(110%) translateX(0) rotate(180deg); 
+      opacity: 0; 
+    }
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .stars {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: transparent;
+    z-index: 1;
+  }
+  
+  .footer {
+    margin-top: 40px;
+    color: #7a4a3e;
+    font-size: 1.1rem;
+    opacity: 0.8;
+    padding: 15px 30px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+    font-weight: 500;
+  }
+  
+  .footer p {
+    margin: 5px 0;
+  }
+  
+  audio {
+    display: none;
+  }
+  
+  /* 信封装饰 */
+  .envelope {
+    position: absolute;
+    width: 100px;
+    height: 70px;
+    background: #ffebee;
+    border: 2px solid #d6336c;
+    border-radius: 8px;
+    z-index: 8;
+    opacity: 0.7;
+    animation: float 12s ease-in-out infinite;
+  }
+  
+  .envelope::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    border-bottom: 30px solid #ffcdd2;
+  }
+  
+  .envelope::after {
+    content: '❤️';
+    position: absolute;
+    top: 25px;
+    left: 35px;
+    font-size: 24px;
+    animation: pulse 2s infinite;
+  }
+  
+  .envelope:nth-child(1) {
+    top: 10%;
+    left: 5%;
+    animation-delay: 0s;
+  }
+  
+  .envelope:nth-child(2) {
+    top: 20%;
+    right: 7%;
+    animation-delay: 2s;
+  }
+  
+  .envelope:nth-child(3) {
+    bottom: 15%;
+    left: 8%;
+    animation-delay: 4s;
+  }
+  
+  .envelope:nth-child(4) {
+    bottom: 25%;
+    right: 10%;
+    animation-delay: 6s;
+  }
+  
+  @keyframes float {
+    0% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+  
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    h1 { font-size: 3rem; }
+    #scrollBox { 
+      height: 280px; 
+      font-size: 1.2rem;
+      padding: 20px;
+      line-height: 1.8;
+    }
+    button { 
+      padding: 14px 30px; 
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+    .footer {
+      font-size: 1rem;
+      padding: 10px 20px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    h1 { font-size: 2.5rem; }
+    p.intro { font-size: 1.1rem; }
+    #scrollBox { 
+      height: 250px; 
+      padding: 15px;
+      line-height: 1.7;
+    }
+    button {
+      font-size: 1.1rem;
+      padding: 12px 25px;
+    }
+    .envelope {
+      transform: scale(0.8);
+    }
+  }
+</style>
+</head>
+<body>
+  <canvas class="stars" id="starsCanvas"></canvas>
+  <div class="heart-falls" id="heartFalls"></div>
+  
+  <!-- 装饰性信封 -->
+  <div class="envelope"></div>
+  <div class="envelope"></div>
+  <div class="envelope"></div>
+  <div class="envelope"></div>
+
+  <div class="container">
+    <h1>❤️ 亲爱的真真 ❤️</h1>
+    <p class="intro">有些藏在心底的话，今天我想悄悄对你说……</p>
+    <button onclick="startTyping()">❤️ 点我查收情书 ❤️</button>
+
+    <div id="scrollBox">
+      <div id="content"></div>
+    </div>
+    
+    <div class="footer">
+      <p>—— 永远爱真真的我</p>
+      <p>❤️ 2025年7月 ❤️</p>
+    </div>
+  </div>
+
+  <audio id="bgm" src="https://music.163.com/song/media/outer/url?id=1366216050.mp3" loop></audio>
+
+  <script>
+    const textLines = [
+      "小宝儿，见字如面：",
+      "一直都想给你写封信，却不知从何落笔。",
+      "从初次相遇到现在，已经300多天了，",
+      "时光匆匆，却满载着我们的甜蜜回忆。",
+      "我曾渴望理想的爱情，",
+      "却未曾想过能如此真切地拥有它。",
+      "记得第一次和你说话时的紧张，",
+      "第一次牵你的手漫步在湛河边，",
+      "一起庆祝100天纪念日的喜悦。",
+      "我们一起过生日、尝美食、游美景，",
+      "在游戏里并肩作战，摘取无数小星星……",
+      "我们解锁了太多太多的第一次，",
+      "每次回想，心中都涌起暖流。",
+      "我贪心地想要占据你未来的所有时光，",
+      "想和你一起探索世界的每个角落，",
+      "把天下的美味都装进你的小肚肚里。",
+      "在你开怀时，我要看着你笑，",
+      "在你难过时，我要逗你笑。",
+      "爱你的人，怎舍得让你生气难过？",
+      "愿未来每个清晨醒来，枕边是你；",
+      "享用每餐的美食时，身旁是你；",
+      "为我的厨艺点赞的，还是你……",
+      "❤️ 爱你，永远 ❤️"
+    ];
+
+    const scrollBox = document.getElementById('scrollBox');
+    const content = document.getElementById('content');
+    let currentLine = 0;
+    let musicPlayed = false;
+
+    function addLineByChar(text, callback) {
+      if (!text.trim()) {
+        // 空行处理
+        const lineDiv = document.createElement('div');
+        lineDiv.classList.add('line');
+        lineDiv.style.height = "20px";
+        content.appendChild(lineDiv);
+        if (callback) callback();
+        return;
+      }
+      
+      const lineDiv = document.createElement('div');
+      lineDiv.classList.add('line');
+      
+      // 为特殊行添加高亮
+      if (text.includes("❤️") || text.includes("爱你")) {
+        lineDiv.classList.add('highlight');
+      }
+      
+      content.appendChild(lineDiv);
+
+      let charIndex = 0;
+      function typeChar() {
+        if (charIndex < text.length) {
+          lineDiv.textContent += text.charAt(charIndex);
+          charIndex++;
+          setTimeout(typeChar, 70 + Math.random() * 30); // 随机打字速度
+        } else {
+          lineDiv.style.animationPlayState = 'running';
+          updateScroll();
+          if (callback) callback();
+        }
+      }
+      typeChar();
+    }
+
+    function updateScroll() {
+      setTimeout(() => {
+        scrollBox.scrollTop = scrollBox.scrollHeight - scrollBox.clientHeight;
+      }, 100);
+    }
+
+    function startTyping() {
+      const music = document.getElementById("bgm");
+      content.innerHTML = "";
+      currentLine = 0;
+      
+      // 处理音乐自动播放
+      if (!musicPlayed) {
+        music.play().then(() => {
+          musicPlayed = true;
+        }).catch(e => {
+          console.log("需要用户交互才能播放音乐");
+        });
+      } else {
+        music.play();
+      }
+      
+      function typeNextLine() {
+        if (currentLine < textLines.length) {
+          addLineByChar(textLines[currentLine], () => {
+            currentLine++;
+            setTimeout(typeNextLine, 600);
+          });
+        }
+      }
+      typeNextLine();
+      
+      // 按钮动画效果
+      const btn = document.querySelector('button');
+      btn.style.animation = "pulse 2s infinite";
+      setTimeout(() => {
+        btn.style.animation = "";
+        btn.textContent = "❤️ 我们的故事 ❤️";
+      }, 2000);
+    }
+
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDuration = (5 + Math.random() * 5) + "s";
+      heart.style.fontSize = (22 + Math.random() * 20) + "px";
+      heart.style.opacity = 0.3 + Math.random() * 0.5;
+      heart.textContent = Math.random() > 0.5 ? "❤️" : "💌";
+      document.getElementById("heartFalls").appendChild(heart);
+      setTimeout(() => heart.remove(), 8000);
+    }
+    setInterval(createHeart, 300);
+
+    const canvas = document.getElementById("starsCanvas");
+    const ctx = canvas.getContext("2d");
+    
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    
+    resizeCanvas();
+    
+    let stars = [];
+    function initStars() {
+      stars = [];
+      const starCount = Math.floor((canvas.width * canvas.height) / 2000);
+      for (let i = 0; i < starCount; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 1.8 + 0.5,
+          speed: Math.random() * 0.2 + 0.05,
+          opacity: Math.random() * 0.8 + 0.2,
+          blink: Math.random() * 5
+        });
+      }
+    }
+    initStars();
+    
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const time = Date.now() / 1000;
+      
+      stars.forEach(star => {
+        // 星星闪烁效果
+        const blinkFactor = Math.sin(time + star.blink) * 0.3 + 0.7;
+        
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity * blinkFactor})`;
+        ctx.fill();
+        
+        // 绘制星芒效果
+        ctx.beginPath();
+        ctx.moveTo(star.x, star.y - star.radius - 2);
+        ctx.lineTo(star.x, star.y + star.radius + 2);
+        ctx.moveTo(star.x - star.radius - 2, star.y);
+        ctx.lineTo(star.x + star.radius + 2, star.y);
+        ctx.strokeStyle = `rgba(255, 255, 255, ${star.opacity * blinkFactor * 0.6})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        
+        star.y += star.speed;
+        if (star.y > canvas.height) {
+          star.y = 0;
+          star.x = Math.random() * canvas.width;
+        }
+      });
+      requestAnimationFrame(drawStars);
+    }
+    drawStars();
+
+    window.addEventListener("resize", () => {
+      resizeCanvas();
+      initStars();
+    });
+    
+    // 初始动画
+    setTimeout(() => {
+      document.querySelector('button').style.animation = "pulse 2s 3";
+    }, 1000);
+  </script>
+</body>
+</html>
